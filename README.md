@@ -5,21 +5,21 @@
 ## Preparation
 
 ```bash
-npm install
+pnpm install
 ```
 
 ## Development
 
 ```bash
-npm run dev src/ex00
-npm run dev src/ex01
+pnpm run dev src/ex00
+pnpm run dev src/ex01
 		...
 ```
 
 ## Evaluation
 
 ```bash
-npm start src/ex00
-npm start src/ex01
+pnpm start src/ex00
+pnpm start src/ex01
 		...
 ```
