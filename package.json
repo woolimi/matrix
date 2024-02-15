@@ -5,8 +5,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx watch",
-    "start": "tsx",
-    "test": "jest --watch"
+    "start": "jest",
+    "test": "jest --watch src/utils"
   },
   "keywords": [],
   "author": "Woolim Park <wpark@student.42.fr>",

@@ -1,16 +1,19 @@
 import { inspect } from "util";
+import type { Field } from "./Type.class";
 
-export class Vector {
-  private value: number[];
-  private size: number;
+export class Vector<T extends Field> {
+  private value: T[];
 
-  constructor(value: number[]) {
-    this.value = [...value];
-    this.size = this.value.length;
+  constructor(value: T[]) {
+    this.value = value;
   }
 
-  static from<K>(value: number[]): Vector {
+  static from(value: Field[]): Vector<Field> {
     return new Vector(value);
+  }
+
+  get size() {
+    return this.value.length;
   }
 
   // Override the default toString() method
@@ -18,30 +21,21 @@ export class Vector {
     return this.value;
   }
 
-  public add(v: Vector) {
+  public add(v: Vector<T>) {
     if (this.size !== v.size) {
       throw new Error("Vector sizes do not match");
     }
-    this.value.forEach((el, idx) => {
-      this.value[idx] = el + v.value[idx];
-    });
-    return this;
+    return Vector.from(this.value.map((el, idx) => el.add(v.value[idx])));
   }
 
-  public sub(v: Vector) {
+  public sub(v: Vector<T>) {
     if (this.size !== v.size) {
       throw new Error("Vector sizes do not match");
     }
-    this.value.forEach((el, idx) => {
-      this.value[idx] = el - v.value[idx];
-    });
-    return this;
+    return Vector.from(this.value.map((el, idx) => el.sub(v.value[idx])));
   }
 
   public scl(n: number) {
-    this.value.forEach((el, idx) => {
-      this.value[idx] = el * n;
-    });
-    return this;
+    return Vector.from(this.value.map((el) => el.scl(n)));
   }
 }

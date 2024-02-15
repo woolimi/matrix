@@ -6,6 +6,7 @@ export abstract class Field {
   abstract add(b: Field): Field;
   abstract sub(b: Field): Field;
   abstract mul(b: Field): Field;
+  abstract scl(b: number): Field;
 }
 
 // Real number K
@@ -19,6 +20,9 @@ export class K extends Field {
   static map(value: number[]) {
     return value.map((el) => new K(el));
   }
+  static map2(value: number[][]) {
+    return value.map((el) => el.map((el) => new K(el)));
+  }
 
   add(b: K) {
     return new K(this.value + b.value);
@@ -28,6 +32,9 @@ export class K extends Field {
   }
   mul(b: K) {
     return new K(this.value * b.value);
+  }
+  scl(b: number) {
+    return new K(this.value * b);
   }
 }
 
@@ -49,6 +56,9 @@ export class C extends Field {
   static map(value: string[]) {
     return value.map((el) => new C(el));
   }
+  static map2(value: string[][]) {
+    return value.map((el) => el.map((el) => new C(el)));
+  }
 
   add(b: C) {
     const result = new C("");
@@ -68,8 +78,11 @@ export class C extends Field {
     result.i = this.n * b.i + this.i * b.n;
     return result;
   }
-  from(value: string) {
-    return new C(value);
+  scl(b: number) {
+    const result = new C("");
+    result.n = this.n * b;
+    result.i = this.n * b;
+    return result;
   }
 
   parse(formula: string) {
