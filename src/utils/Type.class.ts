@@ -59,29 +59,41 @@ export class C extends Field {
   static map2(value: string[][]) {
     return value.map((el) => el.map((el) => new C(el)));
   }
+  public update() {
+    const res: number[] = [this.n, this.i];
+    this.value = res[1] < 0 ? `${res.join(" - ")}i` : `${res.join(" + ")}i`;
+  }
 
   add(b: C) {
     const result = new C("");
     result.n = this.n + b.n;
     result.i = this.i + b.i;
+
+    result.update();
     return result;
   }
   sub(b: C) {
     const result = new C("");
     result.n = this.n - b.n;
     result.i = this.i - b.i;
+
+    result.update();
     return result;
   }
   mul(b: C) {
     const result = new C("");
     result.n = this.n * b.n - this.i * b.i;
     result.i = this.n * b.i + this.i * b.n;
+
+    result.update();
     return result;
   }
   scl(b: number) {
     const result = new C("");
     result.n = this.n * b;
-    result.i = this.n * b;
+    result.i = this.i * b;
+
+    result.update();
     return result;
   }
 
@@ -103,5 +115,7 @@ export class C extends Field {
         this.n += parseFloat(token);
       }
     });
+
+    this.update();
   }
 }

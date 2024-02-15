@@ -19,8 +19,8 @@ describe("Complex type test", () => {
   test("Test complex number calculation", () => {
     const ca = new C("2 + 3i");
     const cb = new C("1 - 2i");
-    expect(ca.add(cb)).toEqual({ n: 3, i: 1, value: "" });
-    expect(ca.sub(cb)).toEqual({ n: 1, i: 5, value: "" });
-    expect(ca.mul(cb)).toEqual({ n: 8, i: -1, value: "" });
+    expect(ca.add(cb)).toEqual(new C("3 + 1i"));
+    expect(ca.sub(cb)).toEqual(new C("1 + 5i"));
+    expect(ca.mul(cb)).toEqual(new C("8 - 1i"));
   });
 });
