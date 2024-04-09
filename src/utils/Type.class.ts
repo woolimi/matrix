@@ -9,32 +9,32 @@ export abstract class Field {
   abstract scl(b: number): Field;
 }
 
-// Real number K
-export class K extends Field {
+// Real number R
+export class R extends Field {
   constructor(value: number) {
     super(value);
   }
   static from(value: number) {
-    return new K(value);
+    return new R(value);
   }
   static map(value: number[]) {
-    return value.map((el) => new K(el));
+    return value.map((el) => new R(el));
   }
   static map2(value: number[][]) {
-    return value.map((el) => el.map((el) => new K(el)));
+    return value.map((el) => el.map((el) => new R(el)));
   }
 
-  add(b: K) {
-    return new K(this.value + b.value);
+  add(b: R) {
+    return new R(this.value + b.value);
   }
-  sub(b: K) {
-    return new K(this.value - b.value);
+  sub(b: R) {
+    return new R(this.value - b.value);
   }
-  mul(b: K) {
-    return new K(this.value * b.value);
+  mul(b: R) {
+    return new R(this.value * b.value);
   }
   scl(b: number) {
-    return new K(this.value * b);
+    return new R(this.value * b);
   }
 }
 
@@ -60,8 +60,21 @@ export class C extends Field {
     return value.map((el) => el.map((el) => new C(el)));
   }
   public update() {
-    const res: number[] = [this.n, this.i];
-    this.value = res[1] < 0 ? `${res.join(" - ")}i` : `${res.join(" + ")}i`;
+    if (!this.n && !this.i) {
+      this.value = "0";
+    } else if (!this.i) {
+      this.value = `${this.n}`;
+    } else if (!this.n) {
+      this.value = `${this.i}i`;
+    } else if (this.i === 1) {
+      this.value = `${this.n} + i`;
+    } else if (this.i === -1) {
+      this.value = `${this.n} - i`;
+    } else if (this.i < 0) {
+      this.value = `${this.n} - ${-this.i}i`;
+    } else {
+      this.value = `${this.n} + ${this.i}i`;
+    }
   }
 
   add(b: C) {

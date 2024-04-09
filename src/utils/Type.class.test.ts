@@ -11,7 +11,7 @@ describe("Complex type test", () => {
     expect(new C("2 + 3i")).toEqual({ n: 2, i: 3, value: "2 + 3i" });
     expect(new C("2")).toEqual({ n: 2, i: 0, value: "2" });
     expect(new C("3i")).toEqual({ n: 0, i: 3, value: "3i" });
-    expect(new C("-i+1")).toEqual({ n: 1, i: -1, value: "-i+1" });
+    expect(new C("-i+1")).toEqual({ n: 1, i: -1, value: "1 - i" });
     expect(new C("2 - 3i")).toEqual({ n: 2, i: -3, value: "2 - 3i" });
     expect(new C("2.3 - 3.4i")).toEqual({ n: 2.3, i: -3.4, value: "2.3 - 3.4i" });
   });
@@ -19,8 +19,8 @@ describe("Complex type test", () => {
   test("Test complex number calculation", () => {
     const ca = new C("2 + 3i");
     const cb = new C("1 - 2i");
-    expect(ca.add(cb)).toEqual(new C("3 + 1i"));
+    expect(ca.add(cb)).toEqual(new C("3 + i"));
     expect(ca.sub(cb)).toEqual(new C("1 + 5i"));
-    expect(ca.mul(cb)).toEqual(new C("8 - 1i"));
+    expect(ca.mul(cb)).toEqual(new C("8 - i"));
   });
 });

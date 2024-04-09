@@ -1,42 +1,42 @@
-import { Vector, Matrix, K } from "../utils";
+import { Vector, Matrix, R } from "../utils";
 
 const vectorAdd = (a: number[], b: number[], expected: number[]) =>
   test(`Vector ADD: [${a}] + [${b}]`, () => {
-    const va = Vector.from(K.map(a));
-    const vb = Vector.from(K.map(b));
-    expect(va.add(vb)).toEqual({ value: K.map(expected) });
+    const va = Vector.from(R.map(a));
+    const vb = Vector.from(R.map(b));
+    expect(va.add(vb)).toEqual({ value: R.map(expected) });
   });
 const vectorSub = (a: number[], b: number[], expected: number[]) =>
   test(`Vector SUB: [${a}] - [${b}]`, () => {
-    const va = Vector.from(K.map(a));
-    const vb = Vector.from(K.map(b));
-    expect(va.sub(vb)).toEqual({ value: K.map(expected) });
+    const va = Vector.from(R.map(a));
+    const vb = Vector.from(R.map(b));
+    expect(va.sub(vb)).toEqual({ value: R.map(expected) });
   });
 
 const vectorScl = (a: number[], b: number, expected: number[]) =>
   test(`Vector SCL: [${a}] * ${b}`, () => {
-    const va = Vector.from(K.map(a));
-    expect(va.scl(b)).toEqual({ value: K.map(expected) });
+    const va = Vector.from(R.map(a));
+    expect(va.scl(b)).toEqual({ value: R.map(expected) });
   });
 
 const matrixAdd = (a: number[][], b: number[][], expected: number[][]) =>
   test(`Matrix ADD: [${a}] + [${b}]`, () => {
-    const va = Matrix.from(K.map2(a));
-    const vb = Matrix.from(K.map2(b));
-    expect(va.add(vb)).toEqual({ value: K.map2(expected) });
+    const va = Matrix.from(R.map2(a));
+    const vb = Matrix.from(R.map2(b));
+    expect(va.add(vb)).toEqual({ value: R.map2(expected) });
   });
 
 const matrixSub = (a: number[][], b: number[][], expected: number[][]) =>
   test(`Matrix SUB: [${a}] - [${b}]`, () => {
-    const va = Matrix.from(K.map2(a));
-    const vb = Matrix.from(K.map2(b));
-    expect(va.sub(vb)).toEqual({ value: K.map2(expected) });
+    const va = Matrix.from(R.map2(a));
+    const vb = Matrix.from(R.map2(b));
+    expect(va.sub(vb)).toEqual({ value: R.map2(expected) });
   });
 
 const matrixScl = (a: number[][], b: number, expected: number[][]) =>
   test(`Matrix SCL: [${a}] * ${b}`, () => {
-    const va = Matrix.from(K.map2(a));
-    expect(va.scl(b)).toEqual({ value: K.map2(expected) });
+    const va = Matrix.from(R.map2(a));
+    expect(va.scl(b)).toEqual({ value: R.map2(expected) });
   });
 
 describe("Test Vector ex00", () => {

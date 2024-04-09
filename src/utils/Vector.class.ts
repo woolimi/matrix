@@ -2,7 +2,7 @@ import { inspect } from "util";
 import type { Field } from "./Type.class";
 
 export class Vector<T extends Field> {
-  private value: T[];
+  public value: T[];
 
   constructor(value: T[]) {
     this.value = value;

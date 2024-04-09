@@ -1,3 +1,4 @@
 export { Vector } from "./Vector.class";
 export { Matrix } from "./Matrix.class";
-export { K, C, Field } from "./Type.class";
+export { R, C, Field } from "./Type.class";
+export { linear_combination } from "./linear_combination";

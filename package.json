@@ -6,7 +6,7 @@
     "build": "tsc",
     "dev": "tsx watch",
     "start": "jest",
-    "test": "jest --watch src/utils"
+    "test": "jest --watch"
   },
   "keywords": [],
   "author": "Woolim Park <wpark@student.42.fr>",
