@@ -7,6 +7,12 @@ export abstract class Field {
   abstract sub(b: Field): Field;
   abstract mul(b: Field): Field;
   abstract scl(b: number): Field;
+  abstract abs(): Field;
+  abstract pow(): Field;
+  apply(c: Function) {
+    this.value = c(this.value);
+    return this;
+  }
 }
 
 // Real number R
@@ -35,6 +41,12 @@ export class R extends Field {
   }
   scl(b: number) {
     return new R(this.value * b);
+  }
+  abs() {
+    return new R(this.value >= 0 ? this.value : -this.value);
+  }
+  pow() {
+    return new R(Math.pow(this.value, 2));
   }
 }
 
@@ -110,6 +122,12 @@ export class C extends Field {
     return result;
   }
 
+  abs(): Field {
+    return new R(Math.sqrt(this.n * this.n + this.i * this.i));
+  }
+  pow(): Field {
+    throw this.value.mul(this.value);
+  }
   parse(formula: string) {
     // Tokenize: "2-3i" => ["2", "-3i"]
     const tokens = formula
