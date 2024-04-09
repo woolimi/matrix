@@ -38,4 +38,11 @@ export class Vector<T extends Field> {
   public scl(n: number) {
     return Vector.from(this.value.map((el) => el.scl(n)));
   }
+
+  public dot(v: Vector<T>) {
+    if (this.size !== v.size) {
+      throw new Error("Vector sizes do not match");
+    }
+    return this.value.map((el, idx) => el.mul(v.value[idx])).reduce((a, b) => a.add(b));
+  }
 }
