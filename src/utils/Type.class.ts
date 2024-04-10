@@ -6,10 +6,10 @@ export abstract class Field {
   abstract add(b: Field): Field;
   abstract sub(b: Field): Field;
   abstract mul(b: Field): Field;
+  abstract div(b: Field): Field;
   abstract scl(b: number): Field;
   abstract abs(): Field;
-  abstract pow(): Field;
-  apply(c: Function) {
+  apply(c: Function): Field {
     this.value = c(this.value);
     return this;
   }
@@ -39,14 +39,14 @@ export class R extends Field {
   mul(b: R) {
     return new R(this.value * b.value);
   }
+  div(b: R) {
+    return new R(this.value / b.value);
+  }
   scl(b: number) {
     return new R(this.value * b);
   }
   abs() {
     return new R(this.value >= 0 ? this.value : -this.value);
-  }
-  pow() {
-    return new R(Math.pow(this.value, 2));
   }
 }
 
@@ -113,6 +113,13 @@ export class C extends Field {
     result.update();
     return result;
   }
+  div(b: C) {
+    const result = new C("");
+    result.n = (this.n * b.n + this.i * b.i) / (b.n * b.n + b.i * b.i);
+    result.i = (this.i * b.n - this.n * b.i) / (b.n * b.n + b.i * b.i);
+    result.update();
+    return result;
+  }
   scl(b: number) {
     const result = new C("");
     result.n = this.n * b;
@@ -124,9 +131,6 @@ export class C extends Field {
 
   abs(): Field {
     return new R(Math.sqrt(this.n * this.n + this.i * this.i));
-  }
-  pow(): Field {
-    throw this.value.mul(this.value);
   }
   parse(formula: string) {
     // Tokenize: "2-3i" => ["2", "-3i"]

@@ -1,6 +1,5 @@
 import { inspect } from "util";
 import type { Field } from "./Type.class";
-import { MyMath } from "./MyMath.class";
 
 export class Vector<T extends Field> {
   public value: T[];
@@ -52,9 +51,10 @@ export class Vector<T extends Field> {
   }
   public norm(): Field {
     return this.value
-      .map((el) => el.pow())
+      .map((v: Field) => v.apply((e: number) => e ** 2))
       .reduce((a, b) => a.add(b))
-      .apply(MyMath.sqrt);
+      .apply((e: number) => e ** 0.5)
+      .apply((v: number) => parseFloat(v.toFixed(10).toString()));
   }
   public norm_inf(): Field {
     return this.value.map((el) => el.abs()).reduce((a, b) => (a > b ? a : b));
