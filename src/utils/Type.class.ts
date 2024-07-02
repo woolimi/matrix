@@ -9,6 +9,7 @@ export abstract class Field {
   abstract div(b: Field): Field;
   abstract scl(b: number): Field;
   abstract abs(): Field;
+  abstract get isZero(): boolean;
   apply(c: Function): Field {
     this.value = c(this.value);
     return this;
@@ -18,7 +19,7 @@ export abstract class Field {
 // Real number R
 export class R extends Field {
   constructor(value: number) {
-    super(value);
+    super(value || 0);
   }
   static from(value: number) {
     return new R(value);
@@ -30,6 +31,9 @@ export class R extends Field {
     return value.map((el) => el.map((el) => new R(el)));
   }
 
+  get isZero() {
+    return this.value === 0;
+  }
   add(b: R) {
     return new R(this.value + b.value);
   }
@@ -40,7 +44,10 @@ export class R extends Field {
     return new R(this.value * b.value);
   }
   div(b: R) {
-    return new R(this.value / b.value);
+    if (b.value === 0) throw new Error("Division by zero");
+    const res = this.value / b.value;
+    if (res === -0) return new R(0);
+    return new R(res);
   }
   scl(b: number) {
     return new R(this.value * b);
@@ -70,6 +77,9 @@ export class C extends Field {
   }
   static map2(value: string[][]) {
     return value.map((el) => el.map((el) => new C(el)));
+  }
+  get isZero() {
+    return this.n === 0 && this.i === 0;
   }
   public update() {
     if (!this.n && !this.i) {
