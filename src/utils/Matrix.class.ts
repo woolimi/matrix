@@ -148,8 +148,8 @@ export class Matrix<T extends Field> {
     return Matrix.from(this.value.map((row, rowIdx) => row.map((el, colIdx) => el.sub(v.value[rowIdx][colIdx]))));
   }
 
-  public scl(n: number) {
-    return Matrix.from(this.value.map((row) => row.map((el) => el.scl(n))));
+  public scl(n: Field) {
+    return Matrix.from(this.value.map((row) => row.map((el) => el.mul(n))));
   }
 
   public mul_vec(v: Vector<T>): Vector<Field> {

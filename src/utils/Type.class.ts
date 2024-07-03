@@ -7,7 +7,6 @@ export abstract class Field {
   abstract sub(b: Field): Field;
   abstract mul(b: Field): Field;
   abstract div(b: Field): Field;
-  abstract scl(b: number): Field;
   abstract abs(): Field;
   abstract neg(): Field;
   abstract get isZero(): boolean;
@@ -54,9 +53,6 @@ export class R extends Field {
     if (res === -0) return new R(0);
     return new R(res);
   }
-  scl(b: number) {
-    return new R(this.value * b);
-  }
   abs() {
     return new R(this.value >= 0 ? this.value : -this.value);
   }
@@ -71,11 +67,11 @@ export class C extends Field {
   public n: number;
   public i: number;
 
-  constructor(value: string) {
+  constructor(value?: string) {
     super(value);
     this.n = 0;
     this.i = 0;
-    this.parse(value);
+    this.parse(value || "0");
   }
   static from(value: string) {
     return new C(value);
@@ -138,14 +134,6 @@ export class C extends Field {
     const result = new C("");
     result.n = (this.n * b.n + this.i * b.i) / (b.n * b.n + b.i * b.i);
     result.i = (this.i * b.n - this.n * b.i) / (b.n * b.n + b.i * b.i);
-    result.update();
-    return result;
-  }
-  scl(b: number) {
-    const result = new C("");
-    result.n = this.n * b;
-    result.i = this.i * b;
-
     result.update();
     return result;
   }

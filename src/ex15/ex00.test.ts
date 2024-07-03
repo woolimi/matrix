@@ -15,10 +15,10 @@ const vectorSub = (a: string[], b: string[], expected: string[]) =>
     expect(va.sub(vb)).toEqual({ value: C.map(expected) });
   });
 
-const vectorScl = (a: string[], b: number, expected: string[]) =>
+const vectorScl = (a: string[], b: string, expected: string[]) =>
   test(`Vector SCL: [${a}] * ${b}`, () => {
     const va = Vector.from(C.map(a));
-    expect(va.scl(b)).toEqual({ value: C.map(expected) });
+    expect(va.scl(C.from(b))).toEqual({ value: C.map(expected) });
   });
 
 const matrixAdd = (a: string[][], b: string[][], expected: string[][]) =>
@@ -35,16 +35,16 @@ const matrixSub = (a: string[][], b: string[][], expected: string[][]) =>
     expect(va.sub(vb)).toEqual({ value: C.map2(expected) });
   });
 
-const matrixScl = (a: string[][], b: number, expected: string[][]) =>
+const matrixScl = (a: string[][], b: string, expected: string[][]) =>
   test(`Matrix SCL: [${a}] * ${b}`, () => {
     const va = Matrix.from(C.map2(a));
-    expect(va.scl(b)).toEqual({ value: C.map2(expected) });
+    expect(va.scl(C.from(b))).toEqual({ value: C.map2(expected) });
   });
 
 describe("Test Complex Number Vector ex00", () => {
   vectorAdd(["1 + 2i", "i"], ["1 - 2i", "4"], ["2", "4 + i"]);
   vectorSub(["1 + 2i", "i"], ["1 - 2i", "4"], ["4i", "-4 + i"]);
-  vectorScl(["2", "3i", "2 + 5i"], 2, ["4", "6i", "4 + 10i"]);
+  vectorScl(["2", "3i", "2 + 5i"], "2", ["4", "6i", "4 + 10i"]);
 });
 
 describe("Test Matrix ex00", () => {
@@ -66,13 +66,13 @@ describe("Test Matrix ex00", () => {
   matrixSub([["1.2 + 0.5i", "2 + 3i"]], [["3 - i", "4 - 10i"]], [["-1.8 + 1.5i", "-2 + 13i"]]);
   matrixScl(
     [
-      ["4", "5", "7"],
+      ["4i", "5", "7"],
       ["1", "2", "9"],
     ],
-    2,
+    "i + 1",
     [
-      ["8", "10", "14"],
-      ["2", "4", "18"],
+      ["-4 + 4i", "5i + 5", "7i + 7"],
+      ["i + 1", "2i + 2", "9i + 9"],
     ],
   );
 });

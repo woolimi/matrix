@@ -1,7 +1,6 @@
 import { Vector } from "./Vector.class";
 import { Matrix } from "./Matrix.class";
-import { Field } from "./Type.class";
-
+import { Field, R, C } from "./Type.class";
 /*
  ** Time complexity: O(n)
  ** Space complexity: O(n)

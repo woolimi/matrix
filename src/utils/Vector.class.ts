@@ -35,8 +35,8 @@ export class Vector<T extends Field> {
     return Vector.from(this.value.map((el, idx) => el.sub(v.value[idx])));
   }
 
-  public scl(n: number): Vector<Field> {
-    return Vector.from(this.value.map((el) => el.scl(n)));
+  public scl(n: Field): Vector<Field> {
+    return Vector.from(this.value.map((el) => el.mul(n)));
   }
 
   public dot(v: Vector<T>): Field {
