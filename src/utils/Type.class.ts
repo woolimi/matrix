@@ -9,7 +9,9 @@ export abstract class Field {
   abstract div(b: Field): Field;
   abstract scl(b: number): Field;
   abstract abs(): Field;
+  abstract neg(): Field;
   abstract get isZero(): boolean;
+  abstract get isOne(): boolean;
   apply(c: Function): Field {
     this.value = c(this.value);
     return this;
@@ -34,6 +36,9 @@ export class R extends Field {
   get isZero() {
     return this.value === 0;
   }
+  get isOne() {
+    return this.value === 1;
+  }
   add(b: R) {
     return new R(this.value + b.value);
   }
@@ -54,6 +59,9 @@ export class R extends Field {
   }
   abs() {
     return new R(this.value >= 0 ? this.value : -this.value);
+  }
+  neg() {
+    return new R(-this.value);
   }
 }
 
@@ -80,6 +88,9 @@ export class C extends Field {
   }
   get isZero() {
     return this.n === 0 && this.i === 0;
+  }
+  get isOne() {
+    return this.n === 1 && this.i === 0;
   }
   public update() {
     if (!this.n && !this.i) {
@@ -141,6 +152,13 @@ export class C extends Field {
 
   abs(): Field {
     return new R(Math.sqrt(this.n * this.n + this.i * this.i));
+  }
+  neg(): Field {
+    const result = new C("");
+    result.n = -this.n;
+    result.i = -this.i;
+    result.update();
+    return result;
   }
   parse(formula: string) {
     // Tokenize: "2-3i" => ["2", "-3i"]

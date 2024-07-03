@@ -2,6 +2,11 @@ import { Vector } from "./Vector.class";
 import { Matrix } from "./Matrix.class";
 import { Field } from "./Type.class";
 
+/*
+ ** Time complexity: O(n)
+ ** Space complexity: O(n)
+ */
+
 export const lerp = (u: Field | Vector<Field> | Matrix<Field>, v: Field | Vector<Field> | Matrix<Field>, t: number) => {
   if (t < 0 || t > 1) {
     throw new Error("t must be between 0 and 1");

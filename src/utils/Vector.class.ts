@@ -47,9 +47,11 @@ export class Vector<T extends Field> {
   }
 
   public norm_1(): Field {
+    // Add the absolute value of each element
     return this.value.map((el) => el.abs()).reduce((a, b) => a.add(b));
   }
   public norm(): Field {
+    // Add the square of the absolute value of each element
     return this.value
       .map((v: Field) => v.apply((e: number) => e ** 2))
       .reduce((a, b) => a.add(b))
@@ -57,6 +59,7 @@ export class Vector<T extends Field> {
       .apply((v: number) => parseFloat(v.toFixed(10).toString()));
   }
   public norm_inf(): Field {
+    // Return the maximum absolute value
     return this.value.map((el) => el.abs()).reduce((a, b) => (a > b ? a : b));
   }
 }

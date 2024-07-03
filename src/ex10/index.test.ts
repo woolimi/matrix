@@ -70,4 +70,89 @@ describe("Test ex10 - row-echelon form", () => {
       ),
     );
   });
+
+  test("Case5", () => {
+    const u = Matrix.from(
+      R.map2([
+        [0, 0],
+        [0, 0],
+      ]),
+    );
+    expect(u.row_echelon()).toEqual(
+      Matrix.from(
+        R.map2([
+          [0, 0],
+          [0, 0],
+        ]),
+      ),
+    );
+  });
+
+  test("Case6", () => {
+    const u = Matrix.from(
+      R.map2([
+        [1, 0],
+        [0, 1],
+      ]),
+    );
+    expect(u.row_echelon()).toEqual(
+      Matrix.from(
+        R.map2([
+          [1, 0],
+          [0, 1],
+        ]),
+      ),
+    );
+  });
+
+  test("Case7", () => {
+    const u = Matrix.from(
+      R.map2([
+        [4, 2],
+        [2, 1],
+      ]),
+    );
+    expect(u.row_echelon()).toEqual(
+      Matrix.from(
+        R.map2([
+          [1, 0.5],
+          [0, 0],
+        ]),
+      ),
+    );
+  });
+
+  test("Case8", () => {
+    const u = Matrix.from(
+      R.map2([
+        [-7, 2],
+        [4, 8],
+      ]),
+    );
+    expect(u.row_echelon()).toEqual(
+      Matrix.from(
+        R.map2([
+          [1, 0],
+          [0, 1],
+        ]),
+      ),
+    );
+  });
+
+  test("Case9", () => {
+    const u = Matrix.from(
+      R.map2([
+        [1, 2],
+        [4, 8],
+      ]),
+    );
+    expect(u.row_echelon()).toEqual(
+      Matrix.from(
+        R.map2([
+          [1, 2],
+          [0, 0],
+        ]),
+      ),
+    );
+  });
 });

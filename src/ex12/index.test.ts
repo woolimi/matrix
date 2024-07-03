@@ -55,4 +55,14 @@ describe("Test ex12 - inverse", () => {
       ),
     );
   });
+  test("Case4", () => {
+    const u = Matrix.from(
+      R.map2([
+        [1, 1, 1],
+        [1, 1, 1],
+        [1, 1, 0],
+      ]),
+    );
+    expect(() => u.inverse()).toThrow("Matrix is singular. Cannot be inverted");
+  });
 });

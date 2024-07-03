@@ -16,22 +16,26 @@ const setPivot = (m: Field[][], initRow: number) => {
     for (let row = initRow; row < nbRows; row++) {
       if (!m[row][col].isZero) {
         rowSwap(m, row, initRow);
-        return col;
+        return { pivot: col, swapped: row !== initRow };
       }
     }
   }
-  return nbCols;
+  return { pivot: nbCols, swapped: false };
 };
 const normalizeRow = (m: Field[][], row: number) => {
   const nbCols = m[0].length;
+  let factor = m[0][0] instanceof R ? new R(1) : new C("1");
+
   for (let col = 0; col < nbCols; col++) {
     if (m[row][col].isZero) continue;
-
+    factor = m[row][col];
     m[row] = m[row].map((el: Field) => {
       return el.div(m[row][col]);
     });
-    return;
+    return factor.div(m[row][col]);
   }
+  // All columns are zero
+  return m[0][0] instanceof R ? new R(0) : new C("");
 };
 const gaussianElimination = (m: Field[][], initRow: number, pivotCol: number) => {
   const nbRows = m.length;
@@ -78,7 +82,7 @@ const mergeMatrix = (m1: Field[][], m2: Field[][]) => {
   return _m1.map((row: Field[], rowIdx: number) => row.concat(_m2[rowIdx]));
 };
 
-const sliceMatrix = (m: Field[][], start: number, end: number) => {
+const sliceMatrix = (m: Field[][], start: number, end: number): Field[][] => {
   const _m = cloneMatrix(m);
   return _m.map((row: Field[]) => row.slice(start, end));
 };
@@ -87,10 +91,23 @@ export class Matrix<T extends Field> {
   public value: T[][];
 
   constructor(value: T[][]) {
+    Matrix.checkValidity(value);
     this.value = value;
   }
 
+  static checkValidity(value: Field[][]) {
+    try {
+      const nbCols = value[0].length;
+      if (!value.every((row) => row.length === nbCols)) {
+        throw new Error();
+      }
+    } catch (error) {
+      throw new Error("Invalid matrix");
+    }
+  }
+
   static from(value: Field[][]): Matrix<Field> {
+    Matrix.checkValidity(value);
     return new Matrix(value);
   }
 
@@ -99,6 +116,17 @@ export class Matrix<T extends Field> {
   }
   get isSquare() {
     return this.value.length === this.value[0].length;
+  }
+  get isIdentity() {
+    if (!this.isSquare) return false;
+
+    for (let row = 0; row < this.value.length; row++) {
+      for (let col = 0; col < this.value.length; col++) {
+        if (row === col && !this.value[row][col].isOne) return false;
+        if (row !== col && !this.value[row][col].isZero) return false;
+      }
+    }
+    return true;
   }
 
   // Override the default toString() method
@@ -142,6 +170,7 @@ export class Matrix<T extends Field> {
     );
   }
 
+  // Sum of elements on the main diagonal of matrix
   public trace() {
     if (!this.isSquare) {
       throw new Error("Matrix is not square");
@@ -155,7 +184,7 @@ export class Matrix<T extends Field> {
       }
       total = total.add(this.value[index][index]);
     }
-    return total;
+    return total as Field;
   }
 
   public transpose(): Matrix<Field> {
@@ -166,10 +195,14 @@ export class Matrix<T extends Field> {
    ** https://www.youtube.com/watch?v=f1e2Zij6W3s
    ** Row echelon form
    ** 1. Start with the first non zero column. If necessary, swap two rows.
-   ** 2. Use replacement row operations to obtain a zero entry in all positions below the pivot entry.
+   ** 2. Do gaussian elimination to obtain a zero entry in all positions below the pivot entry.
    ** 3. Ignore the pivot row and all rows above it. Repeat steps 1 & 2
    **
    ** Reduced row echelon form
+   ** Do the same as row echelon form, but do gaussian elimination in reverse
+   **
+   ** time complexity: O(n^3)
+   ** space complexity: O(n^2)
    */
   public row_echelon(): Matrix<Field> {
     const value = cloneMatrix(this.value);
@@ -177,36 +210,42 @@ export class Matrix<T extends Field> {
 
     // Row echelon form
     for (let row = 0; row < nbRows; row++) {
-      const col = setPivot(value, row);
+      const { pivot: col } = setPivot(value, row);
       normalizeRow(value, row);
       gaussianElimination(value, row, col);
     }
     // Reduced row echelon form
     for (let row = nbRows - 1; row >= 0; row--) {
-      const col = setPivot(value, row);
+      const { pivot: col } = setPivot(value, row);
       gaussianEliminationReverse(value, row, col);
     }
     return Matrix.from(value);
   }
 
+  /*
+   ** Time complexity: O(n^3)
+   ** Space complexity: O(n^2)
+   ** Determinant represent area (2D) or volume (3D) in vector space.
+   ** A determinant of 0 means that the matrix maps vectors to a lower-dimensional subspace, such as a line (in 2D) or a plane (in 3D).
+   ** In other words, the matrix is not invertible if the determinant is 0.
+   */
   public determinant(): Field {
     if (!this.isSquare) throw new Error("Matrix is not square");
+    const value = cloneMatrix(this.value);
+    const nbRows = value.length;
 
-    const _determinant = (m: Field[][]): Field => {
-      if (m.length === 2) {
-        return m[0][0].mul(m[1][1]).sub(m[1][0].mul(m[0][1]));
-      }
-      let det: any = null;
-      for (let col = 0; col < m.length; col++) {
-        const a = m[0][col];
-        const partial = deleteCol(deleteRow(m, 0), col);
-        const M = _determinant(partial);
-        const sign = col % 2 === 0 ? 1 : -1;
-        det = det?.add(a.scl(sign).mul(M)) || a.scl(sign).mul(M);
-      }
-      return det;
-    };
-    return _determinant(this.value);
+    let det: Field = value[0][0] instanceof R ? new R(1) : new C("1");
+
+    // Row echelon form
+    for (let row = 0; row < nbRows; row++) {
+      const { pivot: col, swapped } = setPivot(value, row);
+      if (swapped) det = det.neg();
+
+      const factor = normalizeRow(value, row);
+      det = det.mul(factor);
+      gaussianElimination(value, row, col);
+    }
+    return det.apply((v: number) => parseFloat(v.toFixed(10).toString()));
   }
 
   public identity(): Matrix<Field> {
@@ -223,14 +262,22 @@ export class Matrix<T extends Field> {
   }
   public inverse(): Matrix<Field> {
     if (!this.isSquare) throw new Error("Matrix is not square");
+
     const dim = this.value.length;
     const matrixI = this.identity();
     const m = mergeMatrix(this.value, matrixI.value);
-    const rowEchelonForm = Matrix.from(m).row_echelon();
+    const rowEchelonFormMatrix = Matrix.from(m).row_echelon();
 
-    return Matrix.from(sliceMatrix(rowEchelonForm.value, dim, dim * 2));
+    const I = Matrix.from(sliceMatrix(rowEchelonFormMatrix.value, 0, dim));
+    if (!I.isIdentity) throw new Error("Matrix is singular. Cannot be inverted");
+    const inverted = Matrix.from(sliceMatrix(rowEchelonFormMatrix.value, dim, dim * 2));
+
+    return inverted;
   }
 
+  /*
+   ** Rank of a matrix represents the number of linearly independent rows in the matrix.
+   */
   public rank(): number {
     const rowEchelonForm = this.row_echelon();
     return rowEchelonForm.value.filter((row) => row.some((el) => !el.isZero)).length;

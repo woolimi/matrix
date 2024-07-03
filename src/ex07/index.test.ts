@@ -1,6 +1,6 @@
 import { Matrix, Vector, R } from "../utils";
 
-describe("Test ex07", () => {
+describe("Test ex07 - multiplication", () => {
   test("Case1", () => {
     const u = Matrix.from(
       R.map2([
