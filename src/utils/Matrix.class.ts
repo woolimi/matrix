@@ -60,12 +60,6 @@ const gaussianEliminationReverse = (m: Field[][], initRow: number, pivotCol: num
   }
 };
 
-const deleteRow = (m: Field[][], row: number) => {
-  return m.filter((_, idx) => idx !== row);
-};
-const deleteCol = (m: Field[][], col: number) => {
-  return m.map((row) => row.filter((_, idx) => idx !== col));
-};
 const cloneMatrix = (m: Field[][]) => {
   return cloneDeep(m).map((row: Field[]) =>
     row.map((el: Field) => {
@@ -245,7 +239,8 @@ export class Matrix<T extends Field> {
       det = det.mul(factor);
       gaussianElimination(value, row, col);
     }
-    return det.apply((v: number) => parseFloat(v.toFixed(10).toString()));
+    console.log(det.trim());
+    return det.trim();
   }
 
   public identity(): Matrix<Field> {
