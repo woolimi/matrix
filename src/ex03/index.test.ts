@@ -1,6 +1,6 @@
 import { Vector, R } from "../utils";
 
-describe("Test ex04 - dot product", () => {
+describe("Test ex03 - dot product", () => {
   test("case1", () => {
     const u = Vector.from(R.map([0, 0]));
     const v = Vector.from(R.map([0, 0]));

@@ -47,18 +47,21 @@ export class Vector<T extends Field> {
   }
 
   public norm_1(): Field {
+    // a.k.a Manhattan norm
     // Add the absolute value of each element
     return this.value.map((el) => el.abs()).reduce((a, b) => a.add(b));
   }
   public norm(): Field {
+    // a.k.a Euclidean norm.
     // Add the square of the absolute value of each element
+
     return this.value
-      .map((v: Field) => v.apply((e: number) => e ** 2))
+      .map((v: Field) => v.mul(v))
       .reduce((a, b) => a.add(b))
-      .apply((e: number) => e ** 0.5)
-      .apply((v: number) => parseFloat(v.toFixed(10).toString()));
+      .sqrt();
   }
   public norm_inf(): Field {
+    // a.k.a supremum norm
     // Return the maximum absolute value
     return this.value.map((el) => el.abs()).reduce((a, b) => (a > b ? a : b));
   }

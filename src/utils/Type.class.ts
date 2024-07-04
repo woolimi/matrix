@@ -9,6 +9,8 @@ export abstract class Field {
   abstract div(b: Field): Field;
   abstract abs(): Field;
   abstract neg(): Field;
+  abstract sqrt(): Field;
+  abstract trim(): Field;
   abstract get isZero(): boolean;
   abstract get isOne(): boolean;
   apply(c: Function): Field {
@@ -59,6 +61,12 @@ export class R extends Field {
   neg() {
     return new R(-this.value);
   }
+  sqrt() {
+    return new R(this.value ** 0.5);
+  }
+  trim() {
+    return new R(parseFloat(this.value.toFixed(10)));
+  }
 }
 
 // Complex number C
@@ -89,6 +97,9 @@ export class C extends Field {
     return this.n === 1 && this.i === 0;
   }
   public update() {
+    if (this.n === -0) this.n = 0;
+    if (this.i === -0) this.i = 0;
+
     if (!this.n && !this.i) {
       this.value = "0";
     } else if (!this.i) {
@@ -107,7 +118,7 @@ export class C extends Field {
   }
 
   add(b: C) {
-    const result = new C("");
+    const result = new C();
     result.n = this.n + b.n;
     result.i = this.i + b.i;
 
@@ -115,7 +126,7 @@ export class C extends Field {
     return result;
   }
   sub(b: C) {
-    const result = new C("");
+    const result = new C();
     result.n = this.n - b.n;
     result.i = this.i - b.i;
 
@@ -123,7 +134,7 @@ export class C extends Field {
     return result;
   }
   mul(b: C) {
-    const result = new C("");
+    const result = new C();
     result.n = this.n * b.n - this.i * b.i;
     result.i = this.n * b.i + this.i * b.n;
 
@@ -131,22 +142,39 @@ export class C extends Field {
     return result;
   }
   div(b: C) {
-    const result = new C("");
+    const result = new C();
     result.n = (this.n * b.n + this.i * b.i) / (b.n * b.n + b.i * b.i);
     result.i = (this.i * b.n - this.n * b.i) / (b.n * b.n + b.i * b.i);
     result.update();
     return result;
   }
-
-  abs(): Field {
-    return new R(Math.sqrt(this.n * this.n + this.i * this.i));
+  abs() {
+    return new C(Math.sqrt(this.n * this.n + this.i * this.i).toString());
   }
-  neg(): Field {
-    const result = new C("");
+  neg() {
+    const result = new C();
     result.n = -this.n;
     result.i = -this.i;
     result.update();
     return result;
+  }
+  sqrt() {
+    const result = new C();
+    const magnitude = Math.sqrt(this.n * this.n + this.i * this.i);
+    const angle = Math.atan2(this.i, this.n);
+    const sqrtMagnitude = Math.sqrt(magnitude);
+    const sqrtAngle = angle / 2;
+    result.n = sqrtMagnitude * Math.cos(sqrtAngle);
+    result.i = sqrtMagnitude * Math.sin(sqrtAngle);
+    result.update();
+    return result;
+  }
+  trim() {
+    const c = new C();
+    c.n = parseFloat(this.n.toFixed(10));
+    c.i = parseFloat(this.i.toFixed(10));
+    c.update();
+    return c;
   }
   parse(formula: string) {
     // Tokenize: "2-3i" => ["2", "-3i"]
