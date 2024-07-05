@@ -9,11 +9,11 @@ describe("Test ex03 - dot product", () => {
   test("case2", () => {
     const u = Vector.from(C.map(["1 + i", "2"]));
     const v = Vector.from(C.map(["1", "i"]));
-    expect(u.dot(v)).toEqual(C.from("1 + 3i"));
+    expect(u.dot(v)).toEqual(C.from("1 + i"));
   });
   test("case3", () => {
     const u = Vector.from(C.map(["1 + i", "2 + i"]));
     const v = Vector.from(C.map(["1", "i + 1"]));
-    expect(u.dot(v)).toEqual(C.from("2 + 4i"));
+    expect(u.dot(v)).toEqual(C.from("4"));
   });
 });

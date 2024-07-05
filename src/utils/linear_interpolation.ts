@@ -1,9 +1,12 @@
 import { Vector } from "./Vector.class";
 import { Matrix } from "./Matrix.class";
 import { Field, R, C } from "./Type.class";
+
 /*
  ** Time complexity: O(n)
  ** Space complexity: O(n)
+ **
+ ** lerp(u, v, t) = u + (v - u) * t
  */
 
 export const lerp = (u: Field | Vector<Field> | Matrix<Field>, v: Field | Vector<Field> | Matrix<Field>, t: number) => {

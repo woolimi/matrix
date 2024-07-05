@@ -150,7 +150,7 @@ export class Matrix<T extends Field> {
     if (this.value[0].length !== v.size) {
       throw new Error("Matrix and Vector shapes do not match");
     }
-    return Vector.from(this.value.map((row) => Vector.from(row).dot(v)));
+    return Vector.from(this.value.map((row) => row.map((el, col) => el.mul(v.value[col])).reduce((a, b) => a.add(b))));
   }
 
   public mul_mat(m: Matrix<T>): Matrix<Field> {
@@ -160,11 +160,16 @@ export class Matrix<T extends Field> {
     const transposed_m = m.transpose();
 
     return Matrix.from(
-      this.value.map((row) => transposed_m.value.map((col) => Vector.from(row).dot(Vector.from(col)))),
+      this.value.map((row) =>
+        transposed_m.value.map((col) => row.map((el, colIdx) => el.mul(col[colIdx])).reduce((a, b) => a.add(b))),
+      ),
     );
   }
 
-  // Sum of elements on the main diagonal of matrix
+  /*
+   ** trace
+   ** sum of the elements in the main diagonal
+   */
   public trace() {
     if (!this.isSquare) {
       throw new Error("Matrix is not square");
@@ -239,7 +244,6 @@ export class Matrix<T extends Field> {
       det = det.mul(factor);
       gaussianElimination(value, row, col);
     }
-    console.log(det.trim());
     return det.trim();
   }
 

@@ -8,7 +8,7 @@ describe("Test ex05 - cosine", () => {
       C.from("1"),
     );
     expect(angle_cos(Vector.from(C.map(["1 + i", "2 + i"])), Vector.from(C.map(["1 + i", "2 + 2i"])))).toEqual(
-      C.from("1.0067317128 - 0.0132441773i"),
+      C.from("0.9561828875 + 0.2390457219i"),
     );
   });
 });

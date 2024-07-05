@@ -11,6 +11,7 @@ export abstract class Field {
   abstract neg(): Field;
   abstract sqrt(): Field;
   abstract trim(): Field;
+  abstract conjugate(): Field;
   abstract get isZero(): boolean;
   abstract get isOne(): boolean;
   apply(c: Function): Field {
@@ -66,6 +67,9 @@ export class R extends Field {
   }
   trim() {
     return new R(parseFloat(this.value.toFixed(10)));
+  }
+  conjugate() {
+    return new R(this.value);
   }
 }
 
@@ -149,7 +153,7 @@ export class C extends Field {
     return result;
   }
   abs() {
-    return new C(Math.sqrt(this.n * this.n + this.i * this.i).toString());
+    return new C(Math.pow(this.n * this.n + this.i * this.i, 0.5).toString());
   }
   neg() {
     const result = new C();
@@ -160,9 +164,9 @@ export class C extends Field {
   }
   sqrt() {
     const result = new C();
-    const magnitude = Math.sqrt(this.n * this.n + this.i * this.i);
+    const magnitude = Math.pow(this.n * this.n + this.i * this.i, 0.5);
     const angle = Math.atan2(this.i, this.n);
-    const sqrtMagnitude = Math.sqrt(magnitude);
+    const sqrtMagnitude = Math.pow(magnitude, 0.5);
     const sqrtAngle = angle / 2;
     result.n = sqrtMagnitude * Math.cos(sqrtAngle);
     result.i = sqrtMagnitude * Math.sin(sqrtAngle);
@@ -173,6 +177,13 @@ export class C extends Field {
     const c = new C();
     c.n = parseFloat(this.n.toFixed(10));
     c.i = parseFloat(this.i.toFixed(10));
+    c.update();
+    return c;
+  }
+  conjugate(): Field {
+    const c = new C();
+    c.n = this.n;
+    c.i = -this.i;
     c.update();
     return c;
   }

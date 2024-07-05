@@ -8,4 +8,8 @@ describe("Test ex05 - cosine", () => {
     expect(angle_cos(Vector.from(R.map([4, 2])), Vector.from(R.map([1, 1])))).toEqual(R.from(0.9486832981));
     expect(angle_cos(Vector.from(R.map([-7, 3])), Vector.from(R.map([6, 4])))).toEqual(R.from(-0.5462677805));
   });
+
+  test("Case2", () => {
+    expect(() => angle_cos(Vector.from(R.map([0, 0])), Vector.from(R.map([0, 0])))).toThrow("Division by zero");
+  });
 });

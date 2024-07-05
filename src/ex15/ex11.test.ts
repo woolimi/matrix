@@ -29,4 +29,14 @@ describe("Test ex11 - determinant", () => {
     );
     expect(u.determinant()).toEqual(C.from("-1 + 2i"));
   });
+
+  test("Case4", () => {
+    const u = Matrix.from(
+      C.map2([
+        ["1 + i", "2 + i"],
+        ["3", "4 + 2i"],
+      ]),
+    );
+    expect(u.determinant()).toEqual(C.from("-4 + 3i"));
+  });
 });

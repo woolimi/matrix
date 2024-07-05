@@ -45,7 +45,7 @@ describe("Test ex12 - inverse", () => {
         ["1 + i", "0", "i"],
       ]),
     );
-    console.log(u.inverse());
+
     expect(u.inverse()).toEqual(
       Matrix.from(
         C.map2([
